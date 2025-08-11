@@ -20,13 +20,22 @@ const corsOptions = {
   origin: (origin, callback) => {
     const allowedOrigins = [
       process.env.FRONTEND_URL,
-      process.env.FRONTEND_URL ? `${process.env.FRONTEND_URL}/` : null
+      process.env.FRONTEND_URL ? `${process.env.FRONTEND_URL}/` : null,
+      process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, '') : null
     ].filter(Boolean);
+    if (process.env.FRONTEND_URL) {
+      const nonWww = process.env.FRONTEND_URL.replace(/^https?:\/\/(www\.)?/, 'https://');
+      const www = process.env.FRONTEND_URL.replace(/^https?:\/\//, 'https://www.');
+      allowedOrigins.push(nonWww);
+      allowedOrigins.push(www);
+      allowedOrigins.push(`${nonWww}/`);
+      allowedOrigins.push(`${www}/`);
+    }
 
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      console.error(`CORS blocked: Origin ${origin} not in allowed list.`);
+      console.error(`CORS blocked: Origin ${origin} not in allowed list. Allowed: ${allowedOrigins.join(', ')}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
