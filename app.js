@@ -17,7 +17,7 @@ admin.initializeApp({
 const app = express();
 
 const corsOptions = {
-  origin: 'https://url-shortener-front-pi.vercel.app',
+  origin: process.env.FRONTEND_URL,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true,
   optionsSuccessStatus: 204
