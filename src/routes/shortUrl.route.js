@@ -8,3 +8,5 @@ router.post("/create", authenticateToken, createShortUrl);
 router.get("/user", authenticateToken, getUserUrls);
 
 export default router;
+
+console.log(createShortUrl);

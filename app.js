@@ -20,6 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", shortUrlRoutes);
 app.use("/api/auth", authRoutes);
+console.log(shortUrlRoutes);
 
 app.get("/:id", redirectFromShortUrl);
 
