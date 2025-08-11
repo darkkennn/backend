@@ -9,7 +9,7 @@ export const createShortUrl = async (req, res, next) => {
     }
     const userId = req.userId || null;
     const shortUrlCode = await createShortUrlService(url, userId);
-    res.status(201).json({ shortUrl: process.env.APP_URL + shortUrlCode });
+    res.status(201).json({ shortUrl: process.env.APP_URL + '/' + shortUrlCode });
   } catch (error) {
     next(error);
   }
@@ -26,7 +26,7 @@ export const redirectFromShortUrl = async (req, res, next) => {
 
     console.log(`Attempting redirect for short URL: ${id}`);
     console.log(`Redirecting to full URL: ${urlEntry.full_url}`);
-
+    
     if (typeof urlEntry.full_url !== 'string' || !urlEntry.full_url) {
         console.error(`Invalid full_url found for redirect: ${urlEntry.full_url}`);
         return res.status(500).send("Invalid URL for redirection.");
