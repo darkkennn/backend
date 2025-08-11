@@ -1,4 +1,3 @@
-// backend/app.js
 import { configDotenv } from 'dotenv';
 import express from 'express';
 import connectDb from './src/config/mongo.config.js';
@@ -7,6 +6,7 @@ import shortUrlRoutes from './src/routes/shortUrl.route.js';
 import authRoutes from './src/routes/auth.route.js';
 import { errorHandler } from './src/utils/errorHandler.js';
 import admin from 'firebase-admin';
+import cors from 'cors'; // NEW: Import the cors package
 
 configDotenv({ path: "./.env" });
 
@@ -15,6 +15,14 @@ admin.initializeApp({
 });
 
 const app = express();
+
+const corsOptions = {
+  origin: 'https://url-shortener-front-pi.vercel.app/',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  credentials: true, 
+  optionsSuccessStatus: 204
+};
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
