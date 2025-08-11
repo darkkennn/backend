@@ -1,3 +1,4 @@
+// backend/app.js
 import { configDotenv } from 'dotenv';
 import express from 'express';
 import connectDb from './src/config/mongo.config.js';
@@ -18,9 +19,14 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.post("/api/create-test", (req, res) => {
+    console.log("Received test POST request to /api/create-test");
+    console.log("Request Body:", req.body);
+    res.status(200).json({ message: "Test POST successful!", receivedUrl: req.body.url });
+});
+
 app.use("/api", shortUrlRoutes);
 app.use("/api/auth", authRoutes);
-console.log(shortUrlRoutes);
 
 app.get("/:id", redirectFromShortUrl);
 
@@ -33,5 +39,5 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   connectDb();
-  console.log(`Server is running on http://localhost:${PORT}`); // Log the actual port
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
