@@ -23,7 +23,16 @@ export const redirectFromShortUrl = async (req, res, next) => {
       return res.status(404).json({ message: "Short URL not found" });
     }
     await updateUrlClick(urlEntry.short_url);
-    res.redirect(urlEntry.full_url);
+
+    console.log(`Attempting redirect for short URL: ${id}`);
+    console.log(`Redirecting to full URL: ${urlEntry.full_url}`);
+
+    if (typeof urlEntry.full_url !== 'string' || !urlEntry.full_url) {
+        console.error(`Invalid full_url found for redirect: ${urlEntry.full_url}`);
+        return res.status(500).send("Invalid URL for redirection.");
+    }
+
+    res.redirect(302, urlEntry.full_url);
   } catch (error) {
     next(error);
   }
