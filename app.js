@@ -6,20 +6,11 @@ import shortUrlRoutes from './src/routes/shortUrl.route.js';
 import authRoutes from './src/routes/auth.route.js';
 import { errorHandler } from './src/utils/errorHandler.js';
 import admin from 'firebase-admin';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-const serviceAccountPath = path.resolve(__dirname, './firebase-admin-key.json');
-const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
 
 configDotenv({ path: "./.env" });
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(JSON.parse(process.env.FIREBASE_ADMIN_KEY))
 });
 
 const app = express();
@@ -38,7 +29,8 @@ app.get("/", (req, res) => {
 
 app.use(errorHandler);
 
-app.listen(3000, () => {
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
   connectDb();
-  console.log('Server is running on http://localhost:3000');
+  console.log(`Server is running on http://localhost:${PORT}`); // Log the actual port
 });
